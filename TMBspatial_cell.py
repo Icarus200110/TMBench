@@ -9,6 +9,8 @@ class Cell:
     def __init__(self,id,coordinate):
         self.id = id
         self.coordinate=coordinate
+        self.gene_expression = {}
+        # 存储基因表达量数据，格式为{基因名: 表达量}
     def set_snv(self,snv):
         self.snv=snv
     def set_cnv(self,cnv):
@@ -21,6 +23,8 @@ class Organization:
     def __init__(self,rows,cols):
         self.x_length=rows
         self.y_length=cols
+        self.gene_order = []
+        # 存储基因名称的顺序，确保后续处理和输出一致性
     cell_dict = {}
     matrix = None
 
