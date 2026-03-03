@@ -1,0 +1,57 @@
+Full parameter description and default running example for STGBench software
+All parameters include functional introduction, optional settings and default values
+For quick start, you can directly run the complete default command at the end of this file
+1. Tissue Scaffold Configuration
+This group of parameters defines the basic shape and size of the simulated tissue matrix, which is the spatial carrier for all subsequent mutation and expression simulation.
+Tissue matrix rows and columns: define the number of spatial spots (cells) in the tissue grid, default: 50 rows, 50 columns
+Tissue shape: 3 optional modes, default: Circle
+Circle: standard circular tissue matrix
+Square: standard square tissue matrix
+image: custom tissue shape imported from an image file
+Image path: required only when the image mode is enabled, used to specify the path of the custom tissue shape image, default: ./data/img.png
+2. Spatial Mutation Configuration
+This group of parameters defines SNV and CNV mutation events, including their genomic location, mutation amplitude and spatial distribution pattern.
+SNV Mutation Settings
+SNV basic parameter: defines the core information of the simulated SNV event, format: name,chromosome,position,reference_base,variant_base,max_mutation_frequency, default: onesnv,chr12,25398284,C,T,0.8
+SNV mutation mode: defines the spatial distribution pattern of the mutation, 3 optional modes, default: gradient
+boundary: sharp boundary between mutated and non-mutated regions
+gradient: continuous gradient change of mutation frequency along a specific direction
+nested: nested clonal mutation structure with core, intermediate and peripheral regions
+SNV gradient direction: only valid in gradient mode, defines the direction of mutation frequency change, 3 optional options, default: radial
+radial: gradient from the tissue center to the periphery
+horizontal: gradient from the left to the right of the tissue
+vertical: gradient from the top to the bottom of the tissue
+CNV Mutation Settings
+CNV basic parameter: defines the core information of the simulated CNV event, format: name,chromosome,start_position,end_position,max_copy_number, default: cnv1,chr1,100000,200000,6
+CNV mutation mode: consistent with SNV mutation mode, defines the spatial distribution pattern of copy number variation, default: gradient
+CNV gradient direction: consistent with SNV gradient direction, only valid in gradient mode, default: radial
+3. Sequencing Quality Control Configuration
+This group of parameters defines the sequencing characteristics of the simulated DNA-seq data, to ensure that the simulated data matches the characteristics of real-world sequencing data.
+Mean target region sequencing depth: default: 200X
+PCR duplication rate: default: 3.0
+Sequencing base error rate: default: 0.001 (0.1%)
+Single-end read length: default: 80 bp
+Template DNA fragment length range: default: min 0 bp, max 600 bp
+Sequencing mode: default: paired-end
+4. Gene Expression Simulation Configuration
+This group of parameters defines the CNV-coupled gene expression simulation function, which is used to generate matched spatial transcriptome data synchronized with the genomic mutation landscape.
+Reference expression matrix path: CSV format file containing reference gene expression data, default: ./data/expression_matrix.csv
+Gene annotation file path: TSV format file containing gene chromosome position information for CNV integration, default: ./data/gene_annotation.txt
+Noise level for gene expression adjustment: value range 0-1, default: 0
+Noise dispersion parameter: default: 1
+Spatial correlation strength: value range -1 to 1, default: 0
+5. Output File Management Configuration
+This group of parameters defines the output path and file retention strategy of the simulation results.
+Output directory path: default: automatically created folder named with the current timestamp
+Spatial barcode file path: default: ./data/spatial_barcodes_new.txt
+Retain intermediate FASTQ files: default: False (automatically deleted after BAM file generation to save storage space)
+Retain aligned BAM files: default: True
+Retain BAM index (BAI) files: default: True
+Complete Default Running Command
+Directly run the following command in the terminal to execute the simulation with full default parameters
+python STGBench.py--rows 50--cols 50--shape Circle--TMBspatial_snv "onesnv,chr12,25398284,C,T,0.8"--snv_mutation_mode gradient--snv_gradient_direction radial--TMBspatial_cnv "cnv1,chr1,100000,200000,6"--cnv_mutation_mode gradient--cnv_gradient_direction radial--expression_matrix "./data/expression_matrix.csv"--gene_annotation "./data/gene_annotation.txt"--noise_level 0--noise_dispersion 1--spatial_corr 0--barcode_file "./data/spatial_barcodes_new.txt"--retain_fastq False--retain_bam True--retain_bai True
+Expected Runtime & Output Size (Default Configuration)
+Test environment: High-performance computing node with 32 CPU cores and 128 GB RAM
+Expected total runtime: ~11 hours
+Total final output size: ~67 GB
+Number of simulated spatial spots: ~1700
